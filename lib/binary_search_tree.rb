@@ -3,17 +3,16 @@ class BinarySearchTree
     @root = nil
   end
 
-  
-  def build_tree(array)
-     remove_array = array.uniq
-     remove_dup = remove_array.sort
-     mid_value = remove_dup[remove_dup.length - remove_dup.length/2]
-     @root = Node.new(mid_value)
-     for value in remove_array
-      if value == @root.data
+  def build_tree(array, node = @root)
+    remove_array = array.uniq
+    remove_dup = remove_array.sort
+    mid_value = remove_dup[remove_dup.length - remove_dup.length/2]
+    node = Node.new(mid_value)
+    for value in remove_array
+      if value == node.data
         next
       else
-        current_node = @root
+        current_node = node
         stop = false
         until stop == true
           if value > current_node.data
@@ -36,9 +35,114 @@ class BinarySearchTree
         end
       end
      end
+     node.data
+  end
+
+  def insert(value)
+    stop = false
+    current_node = @root
+    until stop == true
+      if value > current_node.data
+        if current_node.right.nil?
+          current_node.right = Node.new(value)
+          stop = true
+        else
+          current_node = current_node.right
+        end
+      else
+        if current_node.left.nil?
+          current_node.left = Node.new(value)
+          stop = true
+        else
+          current_node = current_node.left
+        end
+      end
+    end
+  end
+
+  def insert_node(value)
+    stop = false
+    current_node = @root
+    until stop == true
+      if value.data > current_node.data
+        if current_node.right.nil?
+          current_node.right = value
+          stop = true
+        else
+          current_node = current_node.right
+        end
+      else
+        if current_node.left.nil?
+          current_node.left = value
+          stop = true
+        else
+          current_node = current_node.left
+        end
+      end
+    end
+  end
+
+  def delete(value)
+    stop = false
+    current_node = @root
+    previous_node = nil
+    last_right = true
+    until current_node.data == value || stop == true
+      if value > current_node.data
+        if current_node.right.nil?
+          stop = true
+          puts "#{value} not found in data."
+        else
+          last_right = true
+          previous_node = current_node
+          current_node = current_node.right
+        end
+      else
+        if current_node.left.nil?
+          stop = true
+          puts "#{value} not found in data."
+        else
+          last_right = false
+          previous_node = current_node
+          current_node = current_node.left
+        end
+      end
+    end
+    if current_node.data == value
+      if current_node.right.nil? && current_node.left.nil?
+        if last_right
+          previous_node.right = nil
+        else
+          previous_node.left = nil
+        end
+      elsif current_node.right.nil?
+        if last_right
+          previous_node.right = current_node.left
+        else
+          previous_node.left = current_node.left
+        end
+      elsif current_node.left.nil?
+        if last_right
+          previous_node.right = current_node.right
+        else
+          previous_node.left = current_node.right
+        end
+      else
+        if last_right
+          previous_node.right = nil
+          insert_node(current_node.right)
+          insert_node(current_node.left)
+        else
+          previous_node.left = nil
+          insert_node(current_node.right)
+          insert_node(current_node.left)
+        end
+      end
+    end
   end
 
   def balance(array)
+    p array
     new_array = array.uniq.sort
     mid_value = new_array[(new_array.length - new_array.length/2)-1]
     mid_index = new_array.length - new_array.length/2
@@ -79,6 +183,7 @@ class BinarySearchTree
         node.left = Node.new(array[0])
       end
     end
+    @root.data
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -86,7 +191,6 @@ class BinarySearchTree
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
-
 
   class Node
     attr_accessor :data, :left, :right
