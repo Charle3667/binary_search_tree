@@ -37,6 +37,22 @@ class BinarySearchTree
     array
   end
 
+  def level_order(node = @root, array = [@root])
+    it = 0
+    for node in array
+      if !node.left.nil? && !node.right.nil?
+        array.push(node.left, node.right)
+      elsif !node.left.nil?
+        array.push(node.left)
+      elsif !node.right.nil?
+        array.push(node.right)
+      end 
+    end
+    for node in array
+      it += 1
+      yield node.data, it
+    end
+  end
 
 
   # def insert(value)

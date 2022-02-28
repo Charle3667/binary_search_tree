@@ -1,6 +1,7 @@
 require_relative 'binary_search_tree'
 
-test_array = [53, 12, 91, 96, 71, 80, 26, 81, 20, 81, 17, 49, 26, 3, 3, 32, 14, 84, 90, 41, 53, 96, 81, 68, 98, 88, 96, 23, 10, 71, 20, 30, 49, 42, 34, 92, 44, 84, 6, 74, 12, 3, 85, 87, 21, 25, 38, 98, 28, 88]
+test_array = (Array.new(16) { rand(1..100) })
+p test_array
 
 
 bst = BinarySearchTree.new
@@ -15,3 +16,4 @@ bst.build_tree(test_array)
 # bst.delete(85)
 bst.pretty_print
 p bst.in_order
+bst.level_order{|x, y| puts "Node number #{y} is: #{x}"}
