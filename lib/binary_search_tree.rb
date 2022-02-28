@@ -4,187 +4,169 @@ class BinarySearchTree
   end
 
   def build_tree(array, node = @root)
-    remove_array = array.uniq
-    remove_dup = remove_array.sort
-    mid_value = remove_dup[remove_dup.length - remove_dup.length/2]
-    node = Node.new(mid_value)
-    for value in remove_array
-      if value == node.data
-        next
-      else
-        current_node = node
-        stop = false
-        until stop == true
-          if value > current_node.data
-            # puts "#{value} goes right at: #{current_node.data}"
-            if !current_node.right.nil?
-            current_node = current_node.right
-            else
-              current_node.right = Node.new(value)
-              stop = true
-            end
-          else
-            # puts "#{value} goes left at: #{current_node.data}"
-            if !current_node.left.nil?
-              current_node = current_node.left
-            else
-              current_node.left = Node.new(value)
-              stop = true
-            end
-          end
-        end
-      end
-     end
-     node.data
-  end
-
-  def insert(value)
-    stop = false
-    current_node = @root
-    until stop == true
-      if value > current_node.data
-        if current_node.right.nil?
-          current_node.right = Node.new(value)
-          stop = true
-        else
-          current_node = current_node.right
-        end
-      else
-        if current_node.left.nil?
-          current_node.left = Node.new(value)
-          stop = true
-        else
-          current_node = current_node.left
-        end
-      end
-    end
-  end
-
-  def insert_node(value)
-    stop = false
-    current_node = @root
-    until stop == true
-      if value.data > current_node.data
-        if current_node.right.nil?
-          current_node.right = value
-          stop = true
-        else
-          current_node = current_node.right
-        end
-      else
-        if current_node.left.nil?
-          current_node.left = value
-          stop = true
-        else
-          current_node = current_node.left
-        end
-      end
-    end
-  end
-
-  def delete(value)
-    stop = false
-    current_node = @root
-    previous_node = nil
-    last_right = true
-    until current_node.data == value || stop == true
-      if value > current_node.data
-        if current_node.right.nil?
-          stop = true
-          puts "#{value} not found in data."
-        else
-          last_right = true
-          previous_node = current_node
-          current_node = current_node.right
-        end
-      else
-        if current_node.left.nil?
-          stop = true
-          puts "#{value} not found in data."
-        else
-          last_right = false
-          previous_node = current_node
-          current_node = current_node.left
-        end
-      end
-    end
-    if current_node.data == value
-      if current_node.right.nil? && current_node.left.nil?
-        if last_right
-          previous_node.right = nil
-        else
-          previous_node.left = nil
-        end
-      elsif current_node.right.nil?
-        if last_right
-          previous_node.right = current_node.left
-        else
-          previous_node.left = current_node.left
-        end
-      elsif current_node.left.nil?
-        if last_right
-          previous_node.right = current_node.right
-        else
-          previous_node.left = current_node.right
-        end
-      else
-        if last_right
-          previous_node.right = nil
-          insert_node(current_node.right)
-          insert_node(current_node.left)
-        else
-          previous_node.left = nil
-          insert_node(current_node.right)
-          insert_node(current_node.left)
-        end
-      end
-    end
-  end
-
-  def balance(array)
-    p array
-    new_array = array.uniq.sort
-    mid_value = new_array[(new_array.length - new_array.length/2)-1]
-    mid_index = new_array.length - new_array.length/2
-    left_array = new_array[0..(mid_index)]
-    right_array = new_array[(mid_index + 2)..new_array.length]
-    @root = Node.new(mid_value)
-    recursive_balance(left_array, @root)
-    recursive_balance(right_array, @root)
-  end
-
-  def recursive_balance(array, node)
+    array = array.uniq.sort
     if array.length > 2
-      new_array = array
-      mid_value = new_array[(new_array.length - new_array.length/2)-1]
-      mid_index = (new_array.length - new_array.length/2)-1
-      left_array = new_array[0..(mid_index - 1)]
-      right_array = new_array[(mid_index + 1)..new_array.length]
-      new_node = Node.new(mid_value)
-      if mid_value > node.data
-        node.right = new_node
-        recursive_balance(left_array, new_node)
-        recursive_balance(right_array, new_node)
+      middle = array[(array.length - array.length / 2) - 1]
+      middle_index = (array.length - array.length / 2) - 1
+      if @root.nil?
+        @root = Node.new(middle, build_tree(array[0..(middle_index - 1)]), build_tree(array[(middle_index + 1)..array.length - 1]))
       else
-        node.left = new_node
-        recursive_balance(left_array, new_node)
-        recursive_balance(right_array, new_node)
+        Node.new(middle, build_tree(array[0..(middle_index - 1)]), build_tree(array[(middle_index + 1)..array.length - 1]))
       end
     elsif array.length == 2
-      if array[0] > node.data
-        node.right = Node.new(array[0], nil, Node.new(array[1]))
-      else
-        node.left = Node.new(array[0], nil, Node.new(array[1]))
-      end
+      Node.new(array[1], Node.new(array[0]))
     else
-      if array[0] > node.data
-        node.right = Node.new(array[0])
-      else
-        node.left = Node.new(array[0])
-      end
+      Node.new(array[0])
     end
-    @root.data
   end
+
+  # def insert(value)
+  #   stop = false
+  #   current_node = @root
+  #   until stop == true
+  #     if value > current_node.data
+  #       if current_node.right.nil?
+  #         current_node.right = Node.new(value)
+  #         stop = true
+  #       else
+  #         current_node = current_node.right
+  #       end
+  #     else
+  #       if current_node.left.nil?
+  #         current_node.left = Node.new(value)
+  #         stop = true
+  #       else
+  #         current_node = current_node.left
+  #       end
+  #     end
+  #   end
+  # end
+
+  # def insert_node(value)
+  #   stop = false
+  #   current_node = @root
+  #   until stop == true
+  #     if value.data > current_node.data
+  #       if current_node.right.nil?
+  #         current_node.right = value
+  #         stop = true
+  #       else
+  #         current_node = current_node.right
+  #       end
+  #     else
+  #       if current_node.left.nil?
+  #         current_node.left = value
+  #         stop = true
+  #       else
+  #         current_node = current_node.left
+  #       end
+  #     end
+  #   end
+  # end
+
+  # def delete(value)
+  #   stop = false
+  #   current_node = @root
+  #   previous_node = nil
+  #   last_right = true
+  #   until current_node.data == value || stop == true
+  #     if value > current_node.data
+  #       if current_node.right.nil?
+  #         stop = true
+  #         puts "#{value} not found in data."
+  #       else
+  #         last_right = true
+  #         previous_node = current_node
+  #         current_node = current_node.right
+  #       end
+  #     else
+  #       if current_node.left.nil?
+  #         stop = true
+  #         puts "#{value} not found in data."
+  #       else
+  #         last_right = false
+  #         previous_node = current_node
+  #         current_node = current_node.left
+  #       end
+  #     end
+  #   end
+  #   if current_node.data == value
+  #     if current_node.right.nil? && current_node.left.nil?
+  #       if last_right
+  #         previous_node.right = nil
+  #       else
+  #         previous_node.left = nil
+  #       end
+  #     elsif current_node.right.nil?
+  #       if last_right
+  #         previous_node.right = current_node.left
+  #       else
+  #         previous_node.left = current_node.left
+  #       end
+  #     elsif current_node.left.nil?
+  #       if last_right
+  #         previous_node.right = current_node.right
+  #       else
+  #         previous_node.left = current_node.right
+  #       end
+  #     else
+  #       if last_right
+  #         previous_node.right = nil
+  #         insert_node(current_node.right)
+  #         insert_node(current_node.left)
+  #       else
+  #         previous_node.left = nil
+  #         insert_node(current_node.right)
+  #         insert_node(current_node.left)
+  #       end
+  #     end
+  #   end
+  # end
+
+  # def balance(array)
+  #   p array
+  #   new_array = array.uniq.sort
+  #   mid_value = new_array[(new_array.length - new_array.length/2)-1]
+  #   mid_index = new_array.length - new_array.length/2
+  #   left_array = new_array[0..(mid_index)]
+  #   right_array = new_array[(mid_index + 2)..new_array.length]
+  #   @root = Node.new(mid_value)
+  #   recursive_balance(left_array, @root)
+  #   recursive_balance(right_array, @root)
+  # end
+
+  # def recursive_balance(array, node)
+  #   if array.length > 2
+  #     new_array = array
+  #     mid_value = new_array[(new_array.length - new_array.length/2)-1]
+  #     mid_index = (new_array.length - new_array.length/2)-1
+  #     left_array = new_array[0..(mid_index - 1)]
+  #     right_array = new_array[(mid_index + 1)..new_array.length]
+  #     new_node = Node.new(mid_value)
+  #     if mid_value > node.data
+  #       node.right = new_node
+  #       recursive_balance(left_array, new_node)
+  #       recursive_balance(right_array, new_node)
+  #     else
+  #       node.left = new_node
+  #       recursive_balance(left_array, new_node)
+  #       recursive_balance(right_array, new_node)
+  #     end
+  #   elsif array.length == 2
+  #     if array[0] > node.data
+  #       node.right = Node.new(array[0], nil, Node.new(array[1]))
+  #     else
+  #       node.left = Node.new(array[0], nil, Node.new(array[1]))
+  #     end
+  #   else
+  #     if array[0] > node.data
+  #       node.right = Node.new(array[0])
+  #     else
+  #       node.left = Node.new(array[0])
+  #     end
+  #   end
+  #   @root.data
+  # end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right

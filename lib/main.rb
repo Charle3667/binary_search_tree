@@ -4,12 +4,13 @@ test_array = [53, 12, 91, 96, 71, 80, 26, 81, 20, 81, 17, 49, 26, 3, 3, 32, 14, 
 
 
 bst = BinarySearchTree.new
-bst.balance(test_array)
-bst.pretty_print
-bst.insert(123)
-bst.insert(150)
-bst.pretty_print
-bst.delete(123)
-bst.pretty_print
-bst.delete(85)
+bst.build_tree(test_array)
+# bst.balance(test_array)
+# bst.pretty_print
+# bst.insert(123)
+# bst.insert(150)
+# bst.pretty_print
+# bst.delete(123)
+# bst.pretty_print
+# bst.delete(85)
 bst.pretty_print
