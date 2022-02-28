@@ -14,3 +14,4 @@ bst.build_tree(test_array)
 # bst.pretty_print
 # bst.delete(85)
 bst.pretty_print
+p bst.in_order

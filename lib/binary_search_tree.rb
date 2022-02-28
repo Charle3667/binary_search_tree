@@ -20,6 +20,25 @@ class BinarySearchTree
     end
   end
 
+  def in_order(node = @root, array = [])
+    if !node.left.nil? && !node.right.nil?
+      in_order(node.left, array)
+      array.push(node.data)
+      in_order(node.right, array)
+    elsif !node.left.nil?
+      in_order(node.left, array)
+      array.push(node.data)
+    elsif !node.right.nil?
+      in_order(node.right, array)
+      array.push(node.data)
+    else
+      array.push(node.data)
+    end
+    array
+  end
+
+
+
   # def insert(value)
   #   stop = false
   #   current_node = @root
