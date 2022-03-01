@@ -46,7 +46,7 @@ class BinarySearchTree
         array.push(node.left)
       elsif !node.right.nil?
         array.push(node.right)
-      end 
+      end
     end
     for node in array
       it += 1
@@ -54,6 +54,33 @@ class BinarySearchTree
     end
   end
 
+  def delete(value, node = @root)
+    if node.nil?
+      puts "#{value} is not in records."
+    elsif node.data == value
+      node.data = 'delete'
+    elsif value > node.data
+      delete(value, node.right)
+    else
+      delete(value, node.left)
+    end
+  end
+
+  def insert(value, node = @root)
+    if value > node.data
+      if node.right.nil?
+        node.right = Node.new(value)
+      else
+        insert(value, node.right)
+      end
+    else
+      if node.left.nil?
+        node.left = Node.new(value)
+      else
+        insert(value, node.right)
+      end
+    end
+  end
 
   # def insert(value)
   #   stop = false
